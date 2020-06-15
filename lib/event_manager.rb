@@ -38,6 +38,18 @@ def save_thank_you_letter(id, form_letter)
   end
 end
 
+def validate_phone(phone)
+  phone = (phone.split("").filter {|char| char.match(/\d/) }).join
+
+  if phone.length < 10 || phone.length > 11 || (phone.length == 11 && phone[0] != "1")
+    "Invalid phone number"
+  else
+    if phone.length == 11
+      phone = phone[1, 11]
+    end
+    phone
+end
+
 template_letter = File.read "form_letter.erb"
 erb_template = ERB.new template_letter
 
@@ -54,4 +66,7 @@ contents.each do |row|
   form_letter = erb_template.result(binding)
 
   save_thank_you_letter(id, form_letter)
+
+  phone = validate_phone(row[:homephone])
+  
 end
