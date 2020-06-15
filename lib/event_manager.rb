@@ -1,7 +1,7 @@
 require "csv"
 require "google/apis/civicinfo_v2"
 
-
+template_letter = File.read("form_letter.html")
 
 puts "EventManager Initialized!"
 
@@ -40,5 +40,7 @@ contents.each do |row|
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislator_by_zipcode(zipcode)
 
-  puts "#{name} #{zipcode} #{legislators}"
+  personal_letter = template_letter.gsub("FIRST_NAME", name)
+  personal_letter.gsub!("LEGISLATORS", legislators)
+  puts personal_letter
 end
