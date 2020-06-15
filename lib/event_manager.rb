@@ -69,4 +69,5 @@ contents.each do |row|
 
   phone = validate_phone(row[:homephone])
   
+  
 end
