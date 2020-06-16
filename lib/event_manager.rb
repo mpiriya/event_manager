@@ -1,6 +1,7 @@
 require "csv"
 require "google/apis/civicinfo_v2"
 require "erb"
+require "date"
 
 puts "EventManager Initialized!"
 
@@ -52,6 +53,8 @@ end
 
 template_letter = File.read "form_letter.erb"
 erb_template = ERB.new template_letter
+sum_hour = 0
+count = 0
 
 contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
 contents.each do |row|
@@ -69,5 +72,11 @@ contents.each do |row|
 
   phone = validate_phone(row[:homephone])
   
-  
+  time = DateTime.strptime(row[:regdate], "%D %H:%M")
+  sum_hour += time.strftime("%H").to_i
+  count += 1
 end
+
+avg = sum_hour / count
+
+puts "Average hour of event registration is #{avg}"
