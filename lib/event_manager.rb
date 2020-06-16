@@ -54,6 +54,7 @@ end
 template_letter = File.read "form_letter.erb"
 erb_template = ERB.new template_letter
 sum_hour = 0
+sum_day = 0
 count = 0
 
 contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
@@ -74,9 +75,13 @@ contents.each do |row|
   
   time = DateTime.strptime(row[:regdate], "%D %H:%M")
   sum_hour += time.strftime("%H").to_i
+  sum_day += time.strftime("%D").wday
   count += 1
 end
 
-avg = sum_hour / count
+avg_hour = sum_hour / count.to_f
+avg_day = sum_day / count.to_f
+days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-puts "Average hour of event registration is #{avg}"
+puts "Average hour of event registration is #{avg_hour}"
+puts "Average day of event registration is #{days[avg_day]}"
